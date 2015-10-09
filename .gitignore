@@ -1,0 +1,8 @@
+target/
+
+# gah macs
+.DS_Store
+
+# intellij
+.idea/
+*.iml
