@@ -3,13 +3,13 @@ package com.etsy.elasticsearch.restlog;
 import org.elasticsearch.common.inject.Inject;
 import org.elasticsearch.common.inject.Module;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.plugins.Plugin;
+import org.elasticsearch.plugins.AbstractPlugin;
 import org.elasticsearch.rest.RestController;
 
 import java.util.Collection;
 import java.util.Collections;
 
-public class RestlogPlugin extends Plugin {
+public class RestlogPlugin extends AbstractPlugin {
 
   @Override
   public String name() {
@@ -22,7 +22,7 @@ public class RestlogPlugin extends Plugin {
   }
 
   @Override
-  public Collection<Module> nodeModules() {
+  public Collection<Module> modules(Settings settings) {
     final Module restLoggerModule = binder -> binder.bind(RestLogger.class).asEagerSingleton();
     return Collections.singleton(restLoggerModule);
   }

@@ -27,7 +27,8 @@ object Build extends sbt.Build {
     pack <<= packTask
   ).settings(
     libraryDependencies ++= Seq(
-      "org.elasticsearch" % "elasticsearch" % V.elasticsearch % "provided"
+      "org.elasticsearch" % "elasticsearch" % V.elasticsearch % "provided",
+      "com.google.guava" % "guava" % V.guava
     )
   )
 
@@ -69,7 +70,8 @@ object Build extends sbt.Build {
   object V {
 
     val java = "1.8"
-    val elasticsearch = "2.0.0"
+    val elasticsearch = "1.7.3"
+    val guava =  "18.0"
 
     def elasticsearchMajorVersion = elasticsearch.split('.')(0)
 
