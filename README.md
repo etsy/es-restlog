@@ -2,7 +2,7 @@
 
 REST request logging for Elasticsearch
 
-# Overview
+## Overview
 
 The `es-restlog` plugin hooks into the Elasticsearch REST request processing chain directly and logs the request before it gets processed, at the entry point i.e. the instance receiving the request.
 
@@ -18,25 +18,25 @@ Note that Elasticsearch provides the 'slowlog' mechanism for capturing index or 
   * requests are logged after processing, so if ES ends up crashing due to the processing that request, it will not be logged
   * if it's a bad request that errors out, you won't see it in the slowlog
 
-# Installation
+## Installation
 
 The plugin is available for Elastisearch 2.x and 1.x. For 1.x it has only been tested on ES 1.7, but will _probably_ work against older releases as well.
 
-## pre-packaged
+### pre-packaged
 
 The release naming scheme is `es-restlog-${plugin.version}-es${es.major.version}.zip`.
 
 Head over to `Releases` on Github to find the latest plugin package.
 
-## packaging
+### packaging
 
 Use the [sbt](http://www.scala-sbt.org/#install) target `pack`, which will generate a plugin zip under `target/`.
 
 Note that you can supply a `file:///path/to/plugin.zip` URL to the plugin script. 
 
-# Configuration
+## Configuration
 
-## plugin
+### plugin
 
 `restlog.category` the logger category to be used, defaults to "restlog".
 
@@ -46,7 +46,7 @@ Note that you can supply a `file:///path/to/plugin.zip` URL to the plugin script
 
 `restlog.null_value` how any value that is not available (e.g. if there was no request body) get encoded in the log line, defaults to "-".
 
-## logging
+### logging
 
 Note that the plugin uses `INFO` level for logging at the configured category.
 
