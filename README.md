@@ -4,7 +4,7 @@ REST request logging for Elasticsearch
 
 ## Overview
 
-The `es-restlog` plugin hooks into the Elasticsearch REST request processing chain directly and logs the request before it gets processed, at the entry point i.e. the instance receiving the request.
+The `es-restlog` plugin hooks into the Elasticsearch REST request processing chain directly and logs the request before it gets processed, at the instance handling the client request.
 
 Sample log line:
 
