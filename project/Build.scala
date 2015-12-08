@@ -5,28 +5,34 @@ import sbt._
 
 object Build extends sbt.Build {
 
+  val javaVersion = "1.8"
+
+  lazy val esVersion = SettingKey[String]("Elasticsearch version")
+
   lazy val restlog = Project(
     id = "es-restlog",
     base = file(".")
   ).settings(
     organization := "es-restlog",
-    version := s"0.1-es${V.elasticsearchMajorVersion}",
+    version := "0.2.0",
+    esVersion := "2.1.0",
     description := "REST request logging for Elasticsearch",
     autoScalaLibrary := false,
     crossPaths := false,
-    javacOptions ++= Seq("-source", V.java, "-target", V.java)
+    javacOptions ++= Seq("-source", javaVersion, "-target", javaVersion)
   ).settings(
     pack <<= packTask
   ).settings(
     libraryDependencies ++= Seq(
-      "org.elasticsearch" % "elasticsearch" % V.elasticsearch % "provided"
+      "org.elasticsearch" % "elasticsearch" % esVersion.value % "provided"
     )
   )
 
   lazy val pack = TaskKey[File]("pack")
 
   def packTask = Def.task {
-    val archive = target.value / s"${name.value}-${version.value}.zip"
+    val esVersionQualifier = s"es_${esVersion.value.replace('.', '_')}"
+    val archive = target.value / s"${name.value}-${version.value}-$esVersionQualifier.zip"
 
     println(archive)
 
@@ -34,14 +40,14 @@ object Build extends sbt.Build {
       val f = File.createTempFile(name.value, "tmp")
       IO.write(f,
         s"""name=${name.value}
-           |version=${version.value}
-           |description=${description.value}
-           |site=false
-           |jvm=true
-           |classname=com.etsy.elasticsearch.restlog.RestlogPlugin
-           |java.version=${V.java}
-           |elasticsearch.version=${V.elasticsearch}
-           |""".stripMargin)
+            |version=${version.value}
+            |description=${description.value}
+            |site=false
+            |jvm=true
+            |classname=com.etsy.elasticsearch.restlog.RestlogPlugin
+            |java.version=$javaVersion
+            |elasticsearch.version=${esVersion.value}
+            |""".stripMargin)
       f
     }
 
@@ -56,15 +62,6 @@ object Build extends sbt.Build {
     pluginDescriptorFile.delete()
 
     archive
-  }
-
-  object V {
-
-    val java = "1.8"
-    val elasticsearch = "2.0.0"
-
-    def elasticsearchMajorVersion = elasticsearch.split('.')(0)
-
   }
 
 }
