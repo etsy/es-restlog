@@ -1,6 +1,5 @@
 import java.io.File
 
-import com.typesafe.sbt.S3Plugin._
 import sbt.Keys._
 import sbt._
 
@@ -16,13 +15,6 @@ object Build extends sbt.Build {
     autoScalaLibrary := false,
     crossPaths := false,
     javacOptions ++= Seq("-source", V.java, "-target", V.java)
-  ).settings(
-    s3Settings ++ Seq(
-      credentials += Credentials(Path.userHome / ".s3credentials"),
-      S3.host in S3.upload := "es-restlog.s3.amazonaws.com",
-      mappings in S3.upload <<= (name, version, target) map { (name, v, out) => Seq((out / s"$name-$v.zip", s"$name-$v.zip")) },
-      S3.upload <<= S3.upload dependsOn pack
-    ): _*
   ).settings(
     pack <<= packTask
   ).settings(
