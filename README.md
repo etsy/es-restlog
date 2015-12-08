@@ -20,11 +20,11 @@ Note that Elasticsearch provides the 'slowlog' mechanism for capturing index or 
 
 ## Installation
 
-The plugin is available for Elastisearch 2.x and 1.x. For 1.x it has only been tested on ES 1.7, but will _probably_ work against older releases as well.
+The plugin is available for Elastisearch 2.x
 
 ### pre-packaged
 
-The release naming scheme is `es-restlog-${plugin.version}-es${es.major.version}.zip`.
+The release naming scheme is `es-restlog-${plugin.version}-es_maj_min_patch_etc.zip`.
 
 Head over to `Releases` on Github to find the latest plugin package.
 
@@ -32,7 +32,11 @@ Head over to `Releases` on Github to find the latest plugin package.
 
 Use the [sbt](http://www.scala-sbt.org/#install) target `pack`, which will generate a plugin zip under `target/`.
 
-Note that you can supply a `file:///path/to/plugin.zip` URL to the plugin script. 
+The ES version is overridable with the `esVersion` setting, so you can do:
+
+```
+$ sbt 'set esVersion := "2.0.1"' clean pack
+```
 
 ## Configuration
 
