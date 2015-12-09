@@ -9,7 +9,7 @@ The `es-restlog` plugin hooks into the Elasticsearch REST request processing cha
 Sample log line:
 
 ```
-[2015-11-06 15:49:00,711] /10.96.244.81:58622 GET /twitter/tweet/_search {"query":{"term":{"user":"kimchy"}}}
+1449700736656 /10.96.244.81:58622 GET /twitter/tweet/_search {"query":{"term":{"user":"kimchy"}}}
 ```
 
 Note that Elasticsearch provides the 'slowlog' mechanism for capturing index or search requests, and you can set the threshold to 0 to log all requests. This approach has some limitations:
@@ -70,5 +70,5 @@ appender:
     datePattern: "'.'yyyy-MM-dd"
     layout:
       type: pattern
-      conversionPattern: "[%d{ISO8601}] %m%n"
+      conversionPattern: "%m%n"
 ```
