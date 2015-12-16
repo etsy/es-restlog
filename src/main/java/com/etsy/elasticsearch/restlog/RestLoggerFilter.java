@@ -33,6 +33,7 @@ final class RestLoggerFilter extends RestFilter {
       if (log.isInfoEnabled() && pathFilter.test(restRequest.rawPath())) {
         log.info(
             joiner.join(
+                System.currentTimeMillis(),
                 restRequest.getRemoteAddress(),
                 restRequest.method(),
                 restRequest.uri(),
