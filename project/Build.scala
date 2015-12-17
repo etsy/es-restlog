@@ -15,7 +15,7 @@ object Build extends sbt.Build {
   ).settings(
     organization := "es-restlog",
     version := "0.3",
-    esVersion := "2.1.0",
+    esVersion := "2.1.1",
     description := "REST request logging for Elasticsearch",
     autoScalaLibrary := false,
     crossPaths := false,
