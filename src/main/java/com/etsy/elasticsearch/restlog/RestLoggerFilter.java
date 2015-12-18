@@ -34,6 +34,7 @@ final class RestLoggerFilter extends RestFilter {
         log.info(
             joiner.join(
                 System.currentTimeMillis(),
+                restRequest.getLocalAddress(),
                 restRequest.getRemoteAddress(),
                 restRequest.method(),
                 restRequest.uri(),
