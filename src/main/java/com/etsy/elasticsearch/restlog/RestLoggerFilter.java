@@ -1,61 +1,93 @@
 package com.etsy.elasticsearch.restlog;
 
 import com.google.common.base.Joiner;
+import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
+import org.apache.logging.log4j.Logger;
+import org.elasticsearch.client.node.NodeClient;
 import org.elasticsearch.common.bytes.BytesReference;
-import org.elasticsearch.common.logging.ESLogger;
-import org.elasticsearch.common.logging.ESLoggerFactory;
+import org.elasticsearch.common.logging.Loggers;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.RestChannel;
-import org.elasticsearch.rest.RestFilter;
-import org.elasticsearch.rest.RestFilterChain;
+import org.elasticsearch.rest.RestHandler;
 import org.elasticsearch.rest.RestRequest;
 
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
+final class RestLoggerFilter implements UnaryOperator<RestHandler> {
 
-final class RestLoggerFilter extends RestFilter {
-
-  private final ESLogger log;
+  private final Logger log;
   private final Predicate<String> pathFilter;
   private final ContentEncoder contentEncoder;
   private final Joiner joiner;
+  private final String requestUuidHeader;
 
   public RestLoggerFilter(Settings settings) {
-    log = ESLoggerFactory.getLogger(settings.get("restlog.category", "restlog"));
+    log = Loggers.getLogger(RestlogPlugin.class, settings.get("restlog.category", "restlog"));
     pathFilter = pathFilter(settings.get("restlog.path_regex", ""));
     contentEncoder = encoder(settings.get("restlog.content_encoding", "json"));
     joiner = Joiner.on(" ").useForNull(settings.get("restlog.null_value", "-"));
+    requestUuidHeader = settings.get("restlog.uuid_header", "");
   }
 
   @Override
-  public void process(RestRequest restRequest, RestChannel restChannel, RestFilterChain restFilterChain) throws Exception {
-    try {
-      if (log.isInfoEnabled() && pathFilter.test(restRequest.rawPath())) {
-        log.info(
-            joiner.join(
-                System.currentTimeMillis(),
-                restRequest.getLocalAddress(),
-                restRequest.getRemoteAddress(),
-                restRequest.method(),
-                restRequest.uri(),
-                encodeContent(restRequest.content())
-            )
-        );
-      }
-    } catch (Exception e) {
-      // errors shouldn't happen, but if they do, prevent it from interfering with request-processing
-      // don't want to emit weird log lines using `log` either, so just send a strace to stderr
-      e.printStackTrace(System.err);
+  public RestHandler apply(RestHandler restHandler) {
+    if (log.isInfoEnabled()) {
+      return new LoggingRestHandler(restHandler);
     }
-    restFilterChain.continueProcessing(restRequest, restChannel);
+    return restHandler;
+  }
+
+  class LoggingRestHandler implements RestHandler {
+    private final RestHandler wrapped;
+
+    public LoggingRestHandler(RestHandler wrapped) {
+      this.wrapped = wrapped;
+    }
+
+    @Override
+    public void handleRequest(RestRequest request, RestChannel channel, NodeClient client)
+        throws Exception {
+      try {
+        if (pathFilter.test(request.rawPath())) {
+          String requestUuidValue = null;
+          if (!requestUuidHeader.equals("")) {
+            requestUuidValue = request.header(requestUuidHeader);
+          }
+          String content = request.hasContent() ? encodeContent(request.content()) : "-";
+          log.info(
+              joiner.join(
+                  System.currentTimeMillis(),
+                  request.getHttpChannel().getLocalAddress(),
+                  request.getHttpChannel().getRemoteAddress(),
+                  request.method(),
+                  request.uri(),
+                  Objects.requireNonNullElse(requestUuidValue, "-"),
+                  content));
+        }
+      } catch (Exception e) {
+        // errors shouldn't happen, but if they do, prevent it from interfering with
+        // request-processing
+        // don't want to emit weird log lines using `log` either, so just send a strace to stderr
+        e.printStackTrace(System.err);
+      }
+      wrapped.handleRequest(request, channel, client);
+    }
+
+    @Override
+    public boolean canTripCircuitBreaker() {
+      return wrapped.canTripCircuitBreaker();
+    }
+
+    @Override
+    public boolean supportsContentStream() {
+      return wrapped.supportsContentStream();
+    }
   }
 
   private String encodeContent(BytesReference content) {
     if (content == null) return null;
-    final int offset = content.arrayOffset();
-    final int length = content.length();
-    if (length - offset == 0) return null;
-    return contentEncoder.encode(content.array(), offset, length);
+    return contentEncoder.encode(content);
   }
 
   private static Predicate<String> pathFilter(String re) {
@@ -71,5 +103,4 @@ final class RestLoggerFilter extends RestFilter {
     }
     return encoder;
   }
-
 }
