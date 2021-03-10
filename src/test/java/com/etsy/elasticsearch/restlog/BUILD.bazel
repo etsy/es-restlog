@@ -4,9 +4,6 @@ load("//:version.bzl", "elasticsearch_version")
     name = "{}".format(file.replace(".java", "")),
     size = "small",
     srcs = ["{}".format(file)],
-    # resources = [
-    #     "//javatests:log4j2_test_xml",
-    # ],
     runtime_deps = [
         "@jvm_deps//:org_apache_logging_log4j_log4j_slf4j_impl",
     ],
@@ -27,5 +24,3 @@ load("//:version.bzl", "elasticsearch_version")
     "RestLoggerFilterTest.java",
     "RestlogPluginTest.java",
 ]]
-
-#global_targets()
