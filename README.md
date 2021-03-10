@@ -20,27 +20,47 @@ Note that Elasticsearch provides the 'slowlog' mechanism for capturing index or 
 
 ## Installation
 
-The plugin is available for Elastisearch 2.x
+The plugin is available for Elastisearch 7.x
 
 ### pre-packaged
-
-The release naming scheme is `es-restlog-${plugin.version}-es_maj_min_patch_etc.zip`.
 
 Head over to `Releases` on Github to find the latest plugin package.
 
 ### packaging
 
-Use the [sbt](http://www.scala-sbt.org/#install) target `pack`, which will generate a plugin zip under `target/`.
+We use [bazel](https://bazel.build/) to build and package the es-restlog elasticsearch plugin.
 
-The ES version is overridable with the `esVersion` setting, so you can do:
+1. Install [bazelisk](https://docs.bazel.build/versions/master/install-bazelisk.html), a simple bazel wrapper and add it in your `$PATH`.
+Bazelisk will automatically download the required bazel version defined in `.bazelversion`.
 
-```
-$ sbt 'set esVersion := "2.0.1"' clean pack
-```
+2. To build the plugin locally:
+    ```
+    bazelisk build //src/main/java/com/etsy/elasticsearch/restlog:restlog_plugin_versioned
+    ``` 
+
+    The plugin `zip` file will be available in the following path:
+    ```
+    bazel-bin/src/main/java/com/etsy/elasticsearch/restlog/restlog-plugin-X.Y.Z.zip
+    ```
+
+3. To update the version of `elasticsearch` before building the plugin:
+  - update the ES version in `version.bzl`
+  - update the jvm dependencies for the new version by running:
+    ```bash
+    REPIN=1 bazelisk run @unpinned_jvm_deps//:pin
+    ```
+  - build the plugin: `bazelisk build //src/main/java/com/etsy/elasticsearch/restlog:restlog_plugin_versioned`
 
 ## Configuration
 
+### x-pack security module
+`es-restlog` and X-Pack security module can't run together, so the latter needs to be disabled.
+
+Add `xpack.security.enabled: false` to `elasticsearch.yml`
+
 ### plugin
+
+The following plugin configuration can be added in `elasticsearch.yml`:
 
 `restlog.category` the logger category to be used, defaults to "restlog".
 
@@ -50,25 +70,4 @@ $ sbt 'set esVersion := "2.0.1"' clean pack
 
 `restlog.null_value` how any value that is not available (e.g. if there was no request body) get encoded in the log line, defaults to "-".
 
-### logging
-
-Note that the plugin uses `INFO` level for logging at the configured category.
-
-You will probably want to direct the restlog output to a dedicated logfile. The configuration can be based off how the slowlogs get configured in `logging.yml`, for example:
-
-```yaml
-logger:
-  restlog: INFO, restlog
-
-additivity:
-  restlog: false
-
-appender:
-  restlog:
-    type: dailyRollingFile
-    file: ${path.logs}/${cluster.name}_rest.log
-    datePattern: "'.'yyyy-MM-dd"
-    layout:
-      type: pattern
-      conversionPattern: "%m%n"
-```
+`restlog.uuid_header` log this request header value if present in the request (e.g. X-Request-ID), defaults to "" (disabled)

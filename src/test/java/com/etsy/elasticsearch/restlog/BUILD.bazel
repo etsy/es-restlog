@@ -1,0 +1,26 @@
+load("//:version.bzl", "elasticsearch_version")
+
+[java_test(
+    name = "{}".format(file.replace(".java", "")),
+    size = "small",
+    srcs = ["{}".format(file)],
+    runtime_deps = [
+        "@jvm_deps//:org_apache_logging_log4j_log4j_slf4j_impl",
+    ],
+    deps = [
+        "//src/main/java/com/etsy/elasticsearch/restlog:restlog-%s" % elasticsearch_version,
+        "@jvm_deps//:junit_junit",
+        "@jvm_deps//:org_apache_logging_log4j_log4j_core",
+        "@jvm_deps//:org_mockito_mockito_core",
+        "@jvm_deps//:org_mockito_mockito_inline",
+        "@jvm_deps//:org_slf4j_slf4j_api",
+        "@jvm_deps//:org_apache_logging_log4j_log4j_api",
+        "@jvm_deps//:org_elasticsearch_client_elasticsearch_rest_high_level_client",
+        "@jvm_deps//:org_elasticsearch_elasticsearch",
+        "@jvm_deps//:org_elasticsearch_test_framework",
+        "@jvm_deps//:org_elasticsearch_elasticsearch_x_content",
+    ],
+) for file in [
+    "RestLoggerFilterTest.java",
+    "RestlogPluginTest.java",
+]]

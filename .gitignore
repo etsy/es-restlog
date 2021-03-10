@@ -1,8 +1,34 @@
 target/
-
 # gah macs
 .DS_Store
 
-# intellij
-.idea/
+# intellij user-specific stuff
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/saveactions_settings.xml
+.idea/compiler.xml
+.idea/sshConfigs.xml
+
+# IntellJ IDEA Bazel plugin settings
+.ijwb
+
+# managed by gradle's intellij (or is it intellij's gradle) plugin
+.idea/libraries
+
+# intellij high-churn
+.idea/deployment.xml
+.idea/uiDesigner.xml
+.idea/inspectionProfiles
+.idea/webServers.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea/codeStyles/
+
 *.iml
+
+# See: https://docs.bazel.build/versions/master/best-practices.html#bazelrc
+user.bazelrc
+bazel-
+bazel-*
+build/

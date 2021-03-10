@@ -1,39 +1,44 @@
 package com.etsy.elasticsearch.restlog;
 
-import org.elasticsearch.common.inject.Inject;
-import org.elasticsearch.common.inject.Module;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+import org.elasticsearch.common.settings.Setting;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.util.concurrent.ThreadContext;
+import org.elasticsearch.plugins.ActionPlugin;
 import org.elasticsearch.plugins.Plugin;
-import org.elasticsearch.rest.RestController;
+import org.elasticsearch.rest.RestHandler;
 
-import java.util.Collection;
-import java.util.Collections;
+public class RestlogPlugin extends Plugin implements ActionPlugin {
 
-public class RestlogPlugin extends Plugin {
+  private final Settings settings;
 
-  @Override
-  public String name() {
-    return "es-restlog";
+  public RestlogPlugin(Settings settings) {
+    this.settings = settings;
   }
 
   @Override
-  public String description() {
-    return "REST request logging for Elasticsearch";
+  public UnaryOperator<RestHandler> getRestHandlerWrapper(ThreadContext threadContext) {
+    return new RestLoggerFilter(this.settings);
   }
 
   @Override
-  public Collection<Module> nodeModules() {
-    final Module restLoggerModule = binder -> binder.bind(RestLogger.class).asEagerSingleton();
-    return Collections.singleton(restLoggerModule);
+  public List<Setting<?>> getSettings() {
+    List<Setting<?>> settings = new ArrayList<>();
+    settings.add(
+        new Setting<>(
+            "restlog.category", "restlog", Function.identity(), Setting.Property.NodeScope));
+    settings.add(
+        new Setting<>("restlog.path_regex", "", Function.identity(), Setting.Property.NodeScope));
+    settings.add(
+        new Setting<>(
+            "restlog.content_encoding", "json", Function.identity(), Setting.Property.NodeScope));
+    settings.add(
+        new Setting<>("restlog.null_value", "-", Function.identity(), Setting.Property.NodeScope));
+    settings.add(
+        new Setting<>("restlog.uuid_header", "", Function.identity(), Setting.Property.NodeScope));
+    return settings;
   }
-
-  public static class RestLogger {
-
-    @Inject
-    public RestLogger(RestController restController, Settings settings) {
-      restController.registerFilter(new RestLoggerFilter(settings));
-    }
-
-  }
-
 }

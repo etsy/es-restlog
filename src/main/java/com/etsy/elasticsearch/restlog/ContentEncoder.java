@@ -1,17 +1,17 @@
 package com.etsy.elasticsearch.restlog;
 
 import com.google.common.io.BaseEncoding;
-import org.elasticsearch.common.xcontent.XContentHelper;
-
 import java.io.IOException;
+import org.elasticsearch.common.bytes.BytesReference;
+import org.elasticsearch.common.xcontent.XContentHelper;
+import org.elasticsearch.common.xcontent.XContentType;
 
 public enum ContentEncoder {
-
   JSON {
     @Override
-    public String encode(byte[] data, int offset, int len) {
+    public String encode(BytesReference content) {
       try {
-        return XContentHelper.convertToJson(data, offset, len, true);
+        return XContentHelper.convertToJson(content, true, XContentType.JSON);
       } catch (IOException e) {
         return "_failed_to_convert_";
       }
@@ -19,17 +19,16 @@ public enum ContentEncoder {
   },
   BASE64 {
     @Override
-    public String encode(byte[] data, int offset, int len) {
-      return BaseEncoding.base64().encode(data, offset, len);
+    public String encode(BytesReference content) {
+      return BaseEncoding.base64().encode(BytesReference.toBytes(content));
     }
   },
   HEX {
     @Override
-    String encode(byte[] data, int offset, int len) {
-      return BaseEncoding.base16().encode(data, offset, len);
+    String encode(BytesReference content) {
+      return BaseEncoding.base16().encode(BytesReference.toBytes(content));
     }
   };
 
-  abstract String encode(byte[] data, int offset, int len);
-
+  abstract String encode(BytesReference content);
 }

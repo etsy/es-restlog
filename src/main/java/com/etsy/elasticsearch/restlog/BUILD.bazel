@@ -1,0 +1,58 @@
+load("//:version.bzl", "elasticsearch_version")
+
+restlog_versioned_name = "restlog-%s" % elasticsearch_version  # java_library will be librestlog-x.y.z.jar
+
+java_library(
+    name = restlog_versioned_name,
+    srcs = glob(["*.java"]),
+    visibility = ["//visibility:public"],
+    deps = [
+        "@jvm_deps//:com_google_guava_guava",
+        "@jvm_deps//:org_apache_logging_log4j_log4j_api",
+        "@jvm_deps//:org_elasticsearch_elasticsearch",
+        "@jvm_deps//:org_elasticsearch_elasticsearch_x_content",
+    ],
+)
+
+genrule(
+    name = "plugin_properties",
+    srcs = [],
+    outs = ["plugin-descriptor.properties"],
+    cmd = """cat << EOF > $@
+name=es-restlog
+version=HEAD
+description=REST request logging for Elasticsearch
+classname=com.etsy.elasticsearch.restlog.RestlogPlugin
+java.version=11
+elasticsearch.version=%s
+EOF
+""" % elasticsearch_version,
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "restlog_plugin_dir",
+    srcs = [
+        restlog_versioned_name,
+        ":plugin_properties",
+        # This runtime dependency must be explicitly included in the plugin.  We can't use `java_binary` to
+        # automatically bundle dependencies because that would also pick up ES's classes, and ES fails at startup if
+        # any plugin includes the ES classes.
+        # N.B.: `data-snapshots-internal` does not seem to be getting updated jars.
+        "@jvm_deps//:com_google_guava_guava_29_0_jre",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "restlog_plugin_versioned",
+    srcs = [
+        ":restlog_plugin_dir",
+    ],
+    outs = ["restlog-plugin-%s.zip" % elasticsearch_version],
+    #  --must-match enforces that files are
+    # readable (instead of making an empty zip with a warning).
+    # --junk-paths stores just the file without paths
+    cmd = "zip --must-match --recurse-paths --junk-paths $@ $(SRCS)",
+    visibility = ["//visibility:public"],
+)
