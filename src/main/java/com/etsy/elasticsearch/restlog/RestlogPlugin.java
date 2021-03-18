@@ -33,6 +33,8 @@ public class RestlogPlugin extends Plugin implements ActionPlugin {
     settings.add(
         new Setting<>("restlog.path_regex", "", Function.identity(), Setting.Property.NodeScope));
     settings.add(
+      new Setting<>("restlog.method_regex", "", Function.identity(), Setting.Property.NodeScope));
+    settings.add(
         new Setting<>(
             "restlog.content_encoding", "json", Function.identity(), Setting.Property.NodeScope));
     settings.add(
