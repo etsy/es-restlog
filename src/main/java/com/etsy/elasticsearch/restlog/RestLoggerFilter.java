@@ -18,13 +18,15 @@ final class RestLoggerFilter implements UnaryOperator<RestHandler> {
 
   private final Logger log;
   private final Predicate<String> pathFilter;
+  private final Predicate<String> methodFilter;
   private final ContentEncoder contentEncoder;
   private final Joiner joiner;
   private final String requestUuidHeader;
 
   public RestLoggerFilter(Settings settings) {
     log = Loggers.getLogger(RestlogPlugin.class, settings.get("restlog.category", "restlog"));
-    pathFilter = pathFilter(settings.get("restlog.path_regex", ""));
+    pathFilter = regexFilter(settings.get("restlog.path_regex", ""));
+    methodFilter = regexFilter(settings.get("restlog.method_regex", ""));
     contentEncoder = encoder(settings.get("restlog.content_encoding", "json"));
     joiner = Joiner.on(" ").useForNull(settings.get("restlog.null_value", "-"));
     requestUuidHeader = settings.get("restlog.uuid_header", "");
@@ -49,7 +51,7 @@ final class RestLoggerFilter implements UnaryOperator<RestHandler> {
     public void handleRequest(RestRequest request, RestChannel channel, NodeClient client)
         throws Exception {
       try {
-        if (pathFilter.test(request.rawPath())) {
+        if (pathFilter.test(request.rawPath()) && methodFilter.test(request.method().toString())) {
           String requestUuidValue = null;
           if (!requestUuidHeader.equals("")) {
             requestUuidValue = request.header(requestUuidHeader);
@@ -90,7 +92,7 @@ final class RestLoggerFilter implements UnaryOperator<RestHandler> {
     return contentEncoder.encode(content);
   }
 
-  private static Predicate<String> pathFilter(String re) {
+  private static Predicate<String> regexFilter(String re) {
     return (re.isEmpty())
         ? s -> true // accept everything
         : Pattern.compile(re).asPredicate();

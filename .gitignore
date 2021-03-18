@@ -17,14 +17,7 @@ target/
 .idea/libraries
 
 # intellij high-churn
-.idea/deployment.xml
-.idea/uiDesigner.xml
-.idea/inspectionProfiles
-.idea/webServers.xml
-.idea/modules.xml
-.idea/misc.xml
-.idea/codeStyles/
-
+.idea/
 *.iml
 
 # See: https://docs.bazel.build/versions/master/best-practices.html#bazelrc

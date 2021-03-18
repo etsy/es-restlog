@@ -145,7 +145,7 @@ public class RestLoggerFilterTest {
   }
 
   @Test
-  public void testRestlogWithRegex() throws Exception {
+  public void testRestlogWithPathRegex() throws Exception {
     testingLogCalls.clear();
     Logger mockLogger = getMockLogger();
     // configure regex for a specific path
@@ -183,6 +183,30 @@ public class RestLoggerFilterTest {
     assertEquals("no restlog output", 0, testingLogCalls.size());
   }
 
+  @Test
+  public void testRestlogWithMethodRegex() throws Exception {
+    testingLogCalls.clear();
+    Logger mockLogger = getMockLogger();
+    Settings regexSetting =
+            Settings.builder().put("restlog.method_regex", "(POST|PUT)").build();
+    RestLoggerFilter rlogger = new RestLoggerFilter(regexSetting);
+    injectMockLogger(rlogger, mockLogger);
+
+    TestRestHandler testRequestHandler = new TestRestHandler();
+    RestHandler restHandler = rlogger.apply(testRequestHandler);
+
+    BytesReference testContent = new BytesArray("{\"query\": {\"match_all\": {}} }");
+
+    sendRequest(restHandler, RestRequest.Method.POST,"/index1/_search?routing=1", testContent);
+    String outputLogLine = ((String) testingLogCalls.pop());
+    assertTrue(
+            "restlog contains search query, actual output: " + outputLogLine,
+            outputLogLine.contains("POST /index1/_search?routing=1 - {\"query\":{\"match_all\":{}}}"));
+    sendRequest(restHandler, RestRequest.Method.GET, "/_cluster/health", new BytesArray(""));
+    assertEquals("no restlog output", 0, testingLogCalls.size());
+  }
+
+
   private Logger getMockLogger() {
     Logger mockLogger = mock(Logger.class);
     when(mockLogger.isInfoEnabled()).thenReturn(true);
@@ -205,6 +229,18 @@ public class RestLoggerFilterTest {
     Field injected = RestLoggerFilter.class.getDeclaredField("log");
     injected.setAccessible(true);
     injected.set(restLogFilter, mockLogger);
+  }
+
+  private void sendRequest(RestHandler restHandler, RestRequest.Method method, String path, BytesReference testContent)
+    throws Exception {
+    FakeRestRequest testSearchReq =
+            new FakeRestRequest.Builder(NamedXContentRegistry.EMPTY)
+                    .withMethod(method)
+                    .withPath(path)
+                    .withContent(testContent, XContentType.JSON)
+                    .build();
+    FakeRestChannel testChannel = new FakeRestChannel(testSearchReq, false, 1);
+    restHandler.handleRequest(testSearchReq, testChannel, mock(NodeClient.class));
   }
 }
 
