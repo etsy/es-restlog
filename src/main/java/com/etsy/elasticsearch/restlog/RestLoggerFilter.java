@@ -51,7 +51,7 @@ final class RestLoggerFilter implements UnaryOperator<RestHandler> {
     public void handleRequest(RestRequest request, RestChannel channel, NodeClient client)
         throws Exception {
       try {
-        if (pathFilter.test(request.rawPath()) && methodFilter.test(request.method().toString())) {
+        if (methodFilter.test(request.method().toString()) && pathFilter.test(request.rawPath())) {
           String requestUuidValue = null;
           if (!requestUuidHeader.equals("")) {
             requestUuidValue = request.header(requestUuidHeader);
