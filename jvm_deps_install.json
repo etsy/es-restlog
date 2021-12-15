@@ -347,49 +347,49 @@
                 "url": "https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.12/httpcore-4.4.12.jar"
             },
             {
-                "coord": "org.apache.logging.log4j:log4j-api:2.11.1",
+                "coord": "org.apache.logging.log4j:log4j-api:2.16.0",
                 "dependencies": [],
                 "directDependencies": [],
-                "file": "v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar",
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.16.0/log4j-api-2.16.0.jar",
                 "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar"
+                    "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.16.0/log4j-api-2.16.0.jar"
                 ],
                 "sha256": "493b37b5a6c49c4f5fb609b966375e4dc1783df436587584ca1dc7e861d0742b",
-                "url": "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar"
+                "url": "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.16.0/log4j-api-2.16.0.jar"
             },
             {
-                "coord": "org.apache.logging.log4j:log4j-core:2.11.1",
+                "coord": "org.apache.logging.log4j:log4j-core:2.16.0",
                 "dependencies": [
-                    "org.apache.logging.log4j:log4j-api:2.11.1"
+                    "org.apache.logging.log4j:log4j-api:2.16.0"
                 ],
                 "directDependencies": [
-                    "org.apache.logging.log4j:log4j-api:2.11.1"
+                    "org.apache.logging.log4j:log4j-api:2.16.0"
                 ],
-                "file": "v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar",
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.16.0/log4j-core-2.16.0.jar",
                 "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar"
+                    "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.16.0/log4j-core-2.16.0.jar"
                 ],
                 "sha256": "a20c34cdac4978b76efcc9d0db66e95600bd807c6a0bd3f5793bcb45d07162ec",
-                "url": "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar"
+                "url": "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.16.0/log4j-core-2.16.0.jar"
             },
             {
-                "coord": "org.apache.logging.log4j:log4j-slf4j-impl:2.11.1",
+                "coord": "org.apache.logging.log4j:log4j-slf4j-impl:2.16.0",
                 "dependencies": [
                     "org.slf4j:slf4j-api:1.7.25",
-                    "org.apache.logging.log4j:log4j-core:2.11.1",
-                    "org.apache.logging.log4j:log4j-api:2.11.1"
+                    "org.apache.logging.log4j:log4j-core:2.16.0",
+                    "org.apache.logging.log4j:log4j-api:2.16.0"
                 ],
                 "directDependencies": [
-                    "org.apache.logging.log4j:log4j-api:2.11.1",
-                    "org.apache.logging.log4j:log4j-core:2.11.1",
+                    "org.apache.logging.log4j:log4j-api:2.16.0",
+                    "org.apache.logging.log4j:log4j-core:2.16.0",
                     "org.slf4j:slf4j-api:1.7.25"
                 ],
-                "file": "v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.11.1/log4j-slf4j-impl-2.11.1.jar",
+                "file": "v1/https/repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.16.0/log4j-slf4j-impl-2.16.0.jar",
                 "mirror_urls": [
-                    "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.11.1/log4j-slf4j-impl-2.11.1.jar"
+                    "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.16.0/log4j-slf4j-impl-2.16.0.jar"
                 ],
                 "sha256": "21a53ca21dfdce610036da8428e6142d2c8c0c7af210d97a6ec5c97c55ce9ae5",
-                "url": "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.11.1/log4j-slf4j-impl-2.11.1.jar"
+                "url": "https://repo1.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.16.0/log4j-slf4j-impl-2.16.0.jar"
             },
             {
                 "coord": "org.apache.lucene:lucene-analyzers-common:8.7.0",
@@ -692,7 +692,7 @@
                     "org.apache.lucene:lucene-misc:8.7.0",
                     "org.apache.lucene:lucene-queries:8.7.0",
                     "org.apache.lucene:lucene-spatial3d:8.7.0",
-                    "org.apache.logging.log4j:log4j-api:2.11.1",
+                    "org.apache.logging.log4j:log4j-api:2.16.0",
                     "org.elasticsearch:elasticsearch-geo:7.10.2",
                     "joda-time:joda-time:2.10.4",
                     "org.hdrhistogram:HdrHistogram:2.1.9",
@@ -817,7 +817,7 @@
                     "org.apache.lucene:lucene-misc:8.7.0",
                     "org.apache.lucene:lucene-queries:8.7.0",
                     "org.apache.lucene:lucene-spatial3d:8.7.0",
-                    "org.apache.logging.log4j:log4j-api:2.11.1",
+                    "org.apache.logging.log4j:log4j-api:2.16.0",
                     "org.elasticsearch:elasticsearch-geo:7.10.2",
                     "joda-time:joda-time:2.10.4",
                     "org.hdrhistogram:HdrHistogram:2.1.9",
@@ -979,7 +979,7 @@
                     "org.apache.lucene:lucene-misc:8.7.0",
                     "org.apache.lucene:lucene-queries:8.7.0",
                     "org.apache.lucene:lucene-spatial3d:8.7.0",
-                    "org.apache.logging.log4j:log4j-api:2.11.1",
+                    "org.apache.logging.log4j:log4j-api:2.16.0",
                     "org.elasticsearch:elasticsearch-geo:7.10.2",
                     "joda-time:joda-time:2.10.4",
                     "org.hdrhistogram:HdrHistogram:2.1.9",
@@ -1009,7 +1009,7 @@
                     "org.apache.lucene:lucene-misc:8.7.0",
                     "org.apache.lucene:lucene-queries:8.7.0",
                     "org.apache.lucene:lucene-spatial3d:8.7.0",
-                    "org.apache.logging.log4j:log4j-api:2.11.1",
+                    "org.apache.logging.log4j:log4j-api:2.16.0",
                     "org.elasticsearch:elasticsearch-geo:7.10.2",
                     "joda-time:joda-time:2.10.4",
                     "org.hdrhistogram:HdrHistogram:2.1.9",
