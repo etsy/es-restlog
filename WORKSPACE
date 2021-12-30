@@ -30,7 +30,7 @@ maven_install(
         "org.elasticsearch:elasticsearch:%s" % elasticsearch_version,
         "org.elasticsearch.test:framework:%s" % elasticsearch_version,
         "org.elasticsearch.client:elasticsearch-rest-high-level-client:%s" % elasticsearch_version,
-        'org.apache.logging.log4j:log4j-api:jar:2.11.1',
+        'org.apache.logging.log4j:log4j-api:jar:2.17.0',
         'org.apache.logging.log4j:log4j-slf4j-impl:jar:2.11.1',
         'org.apache.logging.log4j:log4j-core:2.11.1',        
         'com.google.guava:guava:29.0-jre',
