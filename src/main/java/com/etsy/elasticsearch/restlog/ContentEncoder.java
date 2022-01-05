@@ -4,7 +4,7 @@ import com.google.common.io.BaseEncoding;
 import java.io.IOException;
 import org.elasticsearch.common.bytes.BytesReference;
 import org.elasticsearch.common.xcontent.XContentHelper;
-import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.xcontent.XContentType;
 
 public enum ContentEncoder {
   JSON {

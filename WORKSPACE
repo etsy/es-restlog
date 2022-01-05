@@ -1,6 +1,6 @@
 workspace(name = "restlog")
 
-load("//:version.bzl", "elasticsearch_version")
+load("//:version.bzl", "elasticsearch_version", "log4j_version")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
@@ -30,9 +30,9 @@ maven_install(
         "org.elasticsearch:elasticsearch:%s" % elasticsearch_version,
         "org.elasticsearch.test:framework:%s" % elasticsearch_version,
         "org.elasticsearch.client:elasticsearch-rest-high-level-client:%s" % elasticsearch_version,
-        'org.apache.logging.log4j:log4j-api:jar:2.11.1',
-        'org.apache.logging.log4j:log4j-slf4j-impl:jar:2.11.1',
-        'org.apache.logging.log4j:log4j-core:2.11.1',        
+        "org.apache.logging.log4j:log4j-api:jar:%s" % log4j_version,
+        "org.apache.logging.log4j:log4j-slf4j-impl:jar:%s" % log4j_version,
+        "org.apache.logging.log4j:log4j-core:%s" % log4j_version,
         'com.google.guava:guava:29.0-jre',
         'org.mockito:mockito-core:3.5.13',
         'org.mockito:mockito-inline:3.5.13',
